@@ -2,218 +2,317 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap');
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* =========================
+   THEME (DARK)
+========================= */
+:root {
+  --color-background-primary: #0d0d0d;
+  --color-background-secondary: #1a1a1a;
 
-  body {
-    font-family: 'Syne', sans-serif;
-    background: transparent;
-    color: var(--color-text-primary);
-    padding: 1.5rem 0;
-  }
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b3b3b3;
+  --color-text-tertiary: #808080;
 
-  .search-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--color-background-secondary);
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-lg);
-    padding: 10px 16px;
-    margin-bottom: 1.5rem;
-  }
-  .search-bar input {
-    border: none;
-    background: transparent;
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    color: var(--color-text-primary);
-    width: 100%;
-    outline: none;
-  }
-  .search-bar input::placeholder { color: var(--color-text-tertiary); }
-  .search-icon { color: var(--color-text-tertiary); font-size: 14px; }
+  --color-border-secondary: #2a2a2a;
+  --color-border-tertiary: #222222;
 
-  .tabs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-  .tab {
-    font-family: 'Syne', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 0.5px solid var(--color-border-secondary);
-    background: transparent;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.03em;
-  }
-  .tab:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
-  .tab.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: transparent; }
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
+}
 
-  .section {
-    margin-bottom: 2rem;
-    display: block;
-  }
-  .section.hidden { display: none; }
+/* =========================
+   RESET
+========================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-    padding-bottom: 8px;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-  }
-  .section-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .section-title {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-secondary);
-  }
+/* =========================
+   BODY
+========================= */
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  padding: 1.5rem 0;
+  max-width: 900px;
+  margin: auto;
+}
 
-  .cmd-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    transition: border-color 0.15s;
-  }
-  .cmd-card:hover { border-color: var(--color-border-secondary); }
-  .cmd-card.hidden { display: none; }
+/* =========================
+   SEARCH BAR
+========================= */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 10px 16px;
+  margin-bottom: 1.5rem;
+}
 
-  .cmd-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+.search-bar input {
+  border: none;
+  background: transparent;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  width: 100%;
+  outline: none;
+}
 
-  .cmd-code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    flex: 1;
-    min-width: 0;
-    line-height: 1.6;
-  }
+.search-bar input::placeholder {
+  color: var(--color-text-tertiary);
+}
 
-  .copy-btn {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    color: var(--color-text-tertiary);
-    background: var(--color-background-secondary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: 6px;
-    padding: 3px 8px;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: all 0.15s;
-  }
-  .copy-btn:hover { color: var(--color-text-primary); border-color: var(--color-border-secondary); }
+.search-icon {
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+}
 
-  .cmd-desc {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    margin-top: 8px;
-    line-height: 1.6;
-    padding-left: 2px;
-  }
+/* =========================
+   TABS
+========================= */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
 
-  .sub-list {
-    margin-top: 10px;
-    padding-left: 8px;
-    border-left: 2px solid var(--color-border-tertiary);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .sub-item { display: flex; gap: 10px; align-items: flex-start; }
-  .sub-code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: #1D9E75;
-    flex-shrink: 0;
-  }
-  .sub-desc {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
+.tab {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
 
-  .badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 2px 7px;
-    border-radius: 4px;
-    margin-right: 4px;
-    vertical-align: middle;
-  }
+.tab:hover {
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
 
-  .git { color: #E25D2A; }
-  .cmd-name { color: #185FA5; }
-  .flag { color: #993356; }
-  .arg { color: #3B6D11; }
-  .str { color: #854F0B; }
-  .sep { color: var(--color-text-tertiary); }
+.tab.active {
+  background: #ffffff;
+  color: #0d0d0d;
+  border-color: transparent;
+}
 
-  .tip-box {
-    background: var(--color-background-secondary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-left: 3px solid #1D9E75;
-    border-radius: var(--border-radius-md);
-    padding: 10px 14px;
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
+/* =========================
+   SECTION
+========================= */
+.section {
+  margin-bottom: 2rem;
+  display: block;
+}
 
-  .placeholder-box {
-    background: var(--color-background-secondary);
-    border-radius: var(--border-radius-md);
-    padding: 14px;
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .ph-chip {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    color: var(--color-text-secondary);
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-  .ph-code { color: #993356; font-weight: 500; }
-  .ph-label { color: var(--color-text-tertiary); }
+.section.hidden {
+  display: none;
+}
 
-  .empty-state {
-    text-align: center;
-    padding: 2rem;
-    color: var(--color-text-tertiary);
-    font-size: 14px;
-    display: none;
-  }
-  .empty-state.visible { display: block; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  padding-bottom: 8px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+
+.section-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* =========================
+   CARD
+========================= */
+.cmd-card {
+  background: #121212;
+  border: 0.5px solid #222;
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.cmd-card:hover {
+  border-color: #444;
+  transform: translateY(-1px);
+}
+
+.cmd-card.hidden {
+  display: none;
+}
+
+/* =========================
+   COMMAND
+========================= */
+.cmd-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cmd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+  line-height: 1.6;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.copy-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.copy-btn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-secondary);
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+.cmd-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+/* =========================
+   SUB LIST
+========================= */
+.sub-list {
+  margin-top: 10px;
+  padding-left: 8px;
+  border-left: 2px solid var(--color-border-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sub-item {
+  display: flex;
+  gap: 10px;
+}
+
+.sub-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #1D9E75;
+}
+
+.sub-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* =========================
+   COLORS (CODE)
+========================= */
+.git { color: #E25D2A; }
+.cmd-name { color: #4EA1FF; }
+.flag { color: #ff7aa2; }
+.arg { color: #8bd450; }
+.str { color: #f5a623; }
+.sep { color: var(--color-text-tertiary); }
+
+/* =========================
+   TIP BOX
+========================= */
+.tip-box {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-left: 3px solid #1D9E75;
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* =========================
+   PLACEHOLDER
+========================= */
+.placeholder-box {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 14px;
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ph-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  color: var(--color-text-secondary);
+  display: flex;
+  gap: 6px;
+}
+
+.ph-code {
+  color: #ff7aa2;
+  font-weight: 500;
+}
+
+.ph-label {
+  color: var(--color-text-tertiary);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+  display: none;
+}
+
+.empty-state.visible {
+  display: block;
+}
 </style>
 
 <h2 class="sr-only" style="position:absolute;left:-9999px">Notes Git interactives — commandes et descriptions</h2>
