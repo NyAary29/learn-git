@@ -1,0 +1,767 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: transparent;
+    color: var(--color-text-primary);
+    padding: 1.5rem 0;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 10px 16px;
+    margin-bottom: 1.5rem;
+  }
+  .search-bar input {
+    border: none;
+    background: transparent;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    width: 100%;
+    outline: none;
+  }
+  .search-bar input::placeholder { color: var(--color-text-tertiary); }
+  .search-icon { color: var(--color-text-tertiary); font-size: 14px; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .tab {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 0.5px solid var(--color-border-secondary);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .tab:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+  .tab.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: transparent; }
+
+  .section {
+    margin-bottom: 2rem;
+    display: block;
+  }
+  .section.hidden { display: none; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .section-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .cmd-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .cmd-card:hover { border-color: var(--color-border-secondary); }
+  .cmd-card.hidden { display: none; }
+
+  .cmd-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .cmd-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.6;
+  }
+
+  .copy-btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 6px;
+    padding: 3px 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { color: var(--color-text-primary); border-color: var(--color-border-secondary); }
+
+  .cmd-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-top: 8px;
+    line-height: 1.6;
+    padding-left: 2px;
+  }
+
+  .sub-list {
+    margin-top: 10px;
+    padding-left: 8px;
+    border-left: 2px solid var(--color-border-tertiary);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sub-item { display: flex; gap: 10px; align-items: flex-start; }
+  .sub-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #1D9E75;
+    flex-shrink: 0;
+  }
+  .sub-desc {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .git { color: #E25D2A; }
+  .cmd-name { color: #185FA5; }
+  .flag { color: #993356; }
+  .arg { color: #3B6D11; }
+  .str { color: #854F0B; }
+  .sep { color: var(--color-text-tertiary); }
+
+  .tip-box {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-left: 3px solid #1D9E75;
+    border-radius: var(--border-radius-md);
+    padding: 10px 14px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .placeholder-box {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 14px;
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ph-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .ph-code { color: #993356; font-weight: 500; }
+  .ph-label { color: var(--color-text-tertiary); }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-tertiary);
+    font-size: 14px;
+    display: none;
+  }
+  .empty-state.visible { display: block; }
+</style>
+
+<h2 class="sr-only" style="position:absolute;left:-9999px">Notes Git interactives — commandes et descriptions</h2>
+
+<div class="search-bar">
+  <span class="search-icon">⌕</span>
+  <input type="text" id="search" placeholder="Chercher une commande ou une description..." oninput="filterAll()">
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" onclick="filterSection('all', this)">Tout</button>
+  <button class="tab" onclick="filterSection('historique', this)">Historique</button>
+  <button class="tab" onclick="filterSection('annuler', this)">Annuler</button>
+  <button class="tab" onclick="filterSection('alias', this)">Alias</button>
+  <button class="tab" onclick="filterSection('branches', this)">Branches</button>
+  <button class="tab" onclick="filterSection('avance', this)">Avancé</button>
+  <button class="tab" onclick="filterSection('recherche', this)">Recherche</button>
+</div>
+
+<div class="empty-state" id="empty">Aucune commande trouvée pour cette recherche.</div>
+
+<!-- HISTORIQUE -->
+<div class="section" data-section="historique" id="sec-historique">
+  <div class="section-header">
+    <div class="section-dot" style="background:#185FA5"></div>
+    <span class="section-title">Consulter l'historique</span>
+  </div>
+
+  <div class="cmd-card" data-text="git log historique commits">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span></div>
+      <button class="copy-btn" onclick="copy('git log', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Affiche la liste de tous les commits du plus récent au plus ancien.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git log oneline compact quotidien recommandé">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--oneline</span></div>
+      <button class="copy-btn" onclick="copy('git log --oneline', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Format compact — l'option la plus utilisée au quotidien. <strong>Recommandé.</strong></div>
+  </div>
+
+  <div class="cmd-card" data-text="git log graph branches merges visualiser decorate">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--oneline --graph --all --decorate</span></div>
+      <button class="copy-btn" onclick="copy('git log --oneline --graph --all --decorate', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Visualise les branches et les merges directement dans le terminal.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git log pretty format affichage contrôle auteur date sha">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--pretty=format</span><span class="sep">:</span><span class="str">"%h %an %ar %s"</span></div>
+      <button class="copy-btn" onclick="copy('git log --pretty=format:"%h %an %ar %s"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Contrôle total sur l'affichage avec des placeholders personnalisés.</div>
+    <div class="placeholder-box">
+      <div class="ph-chip"><span class="ph-code">%H</span><span class="ph-label">SHA complet</span></div>
+      <div class="ph-chip"><span class="ph-code">%h</span><span class="ph-label">SHA abrégé</span></div>
+      <div class="ph-chip"><span class="ph-code">%an</span><span class="ph-label">nom auteur</span></div>
+      <div class="ph-chip"><span class="ph-code">%ae</span><span class="ph-label">email auteur</span></div>
+      <div class="ph-chip"><span class="ph-code">%ar</span><span class="ph-label">date relative</span></div>
+      <div class="ph-chip"><span class="ph-code">%ai</span><span class="ph-label">date ISO</span></div>
+      <div class="ph-chip"><span class="ph-code">%s</span><span class="ph-label">message (1ère ligne)</span></div>
+      <div class="ph-chip"><span class="ph-code">%d</span><span class="ph-label">branches / tags</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git log stat fichiers modifiés lignes ajoutées supprimées">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--stat --oneline</span></div>
+      <button class="copy-btn" onclick="copy('git log --stat --oneline', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Affiche les fichiers modifiés avec le nombre de lignes ajoutées <span style="color:#3B6D11;font-weight:600">(+)</span> et supprimées <span style="color:#A32D2D;font-weight:600">(−)</span>.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git log -p modifications complètes diff">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">-p -1</span></div>
+      <button class="copy-btn" onclick="copy('git log -p -1', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Affiche les modifications complètes (diff) du dernier commit.</div>
+  </div>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <div class="section-dot" style="background:#534AB7"></div>
+    <span class="section-title">Filtrer l'historique</span>
+  </div>
+
+  <div class="cmd-card" data-text="git log limiter nombre commits 5 10 derniers">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">-N</span></div>
+      <button class="copy-btn" onclick="copy('git log -5', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Limite le nombre de commits affichés.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git log -5</span><span class="sub-desc">Les 5 derniers commits</span></div>
+      <div class="sub-item"><span class="sub-code">git log --oneline -10</span><span class="sub-desc">Les 10 derniers en format compact</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git log author auteur filtrer">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--author=</span><span class="str">"Name"</span></div>
+      <button class="copy-btn" onclick="copy('git log --author="Name"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Filtre les commits par auteur.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git log since until date filtrer période semaine">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--since=</span><span class="str">"date"</span> <span class="flag">--until=</span><span class="str">"date"</span></div>
+      <button class="copy-btn" onclick="copy('git log --since="2026-01-01" --until="2026-12-31"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Filtre les commits par plage de dates.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">--since="2026-01-01"</span><span class="sub-desc">Depuis une date précise</span></div>
+      <div class="sub-item"><span class="sub-code">--until="2026-12-31"</span><span class="sub-desc">Jusqu'à une date précise</span></div>
+      <div class="sub-item"><span class="sub-code">--since="2 weeks ago"</span><span class="sub-desc">Les 2 dernières semaines</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git log grep message rechercher filtrer">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">--grep=</span><span class="str">"message"</span></div>
+      <button class="copy-btn" onclick="copy('git log --grep="message"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Filtre par mot-clé dans le message de commit.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git log -S contenu fonction recherche pickaxe">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">-S</span> <span class="str">"function_name"</span></div>
+      <button class="copy-btn" onclick="copy('git log -S "function_name"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Filtre par contenu modifié — trouve les commits qui ont ajouté ou supprimé une chaîne de caractères dans le code.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git show inspecter commit détail">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">show</span> <span class="arg">&lt;commit&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git show HEAD', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Inspecte le contenu détaillé d'un commit spécifique.</div>
+  </div>
+</div>
+
+<!-- ANNULER -->
+<div class="section hidden" data-section="annuler" id="sec-annuler">
+  <div class="section-header">
+    <div class="section-dot" style="background:#A32D2D"></div>
+    <span class="section-title">Annuler des modifications</span>
+  </div>
+
+  <div class="cmd-card" data-text="git restore staged retirer staging index">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">restore</span> <span class="flag">--staged</span> <span class="arg">&lt;fichier&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git restore --staged fichier', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Retire un fichier du staging sans supprimer ses modifications.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git restore --staged .</span><span class="sub-desc">Retire tous les fichiers du staging</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git restore annuler modifications fichier">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">restore</span> <span class="arg">&lt;fichier&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git restore fichier', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Annule les modifications non-stagées d'un fichier. <span style="color:#A32D2D;font-weight:600">Irréversible.</span></div>
+  </div>
+
+  <div class="cmd-card" data-text="git restore source commit restaurer version spécifique">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">restore</span> <span class="flag">--source=</span><span class="arg">&lt;commit&gt;</span> <span class="arg">&lt;fichier&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git restore --source=HEAD~2 fichier', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Restaure un fichier dans l'état d'un commit précis.</div>
+  </div>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <div class="section-dot" style="background:#854F0B"></div>
+    <span class="section-title">Corriger le dernier commit</span>
+  </div>
+
+  <div class="cmd-card" data-text="git commit amend modifier message dernier commit">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">commit</span> <span class="flag">--amend</span> <span class="flag">-m</span> <span class="str">"message corrigé"</span></div>
+      <button class="copy-btn" onclick="copy('git commit --amend -m "nouveau message"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Modifie le message du dernier commit. Ne pas utiliser sur des commits déjà poussés.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git commit amend no-edit ajouter fichier oublié">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">commit</span> <span class="flag">--amend --no-edit</span></div>
+      <button class="copy-btn" onclick="copy('git commit --amend --no-edit', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Ajoute des fichiers au dernier commit sans changer son message.</div>
+  </div>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <div class="section-dot" style="background:#3C3489"></div>
+    <span class="section-title">Inverser un commit publié</span>
+  </div>
+
+  <div class="cmd-card" data-text="git revert inverser commit publié sûr">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">revert</span> <span class="arg">&lt;commit&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git revert HEAD', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Crée un nouveau commit qui annule les changements d'un commit précédent. Sûr pour les branches partagées.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git revert --no-edit &lt;commit&gt;</span><span class="sub-desc">Revert sans ouvrir l'éditeur</span></div>
+      <div class="sub-item"><span class="sub-code">git revert --no-edit A..B</span><span class="sub-desc">Inverse une série de commits</span></div>
+    </div>
+    <div class="tip-box">Contrairement à <code style="font-family:'JetBrains Mono',monospace;font-size:12px">reset</code>, revert conserve l'historique et peut être poussé sur une branche partagée sans problème.</div>
+  </div>
+</div>
+
+<!-- ALIAS -->
+<div class="section hidden" data-section="alias" id="sec-alias">
+  <div class="section-header">
+    <div class="section-dot" style="background:#0F6E56"></div>
+    <span class="section-title">Alias Git</span>
+  </div>
+
+  <div class="cmd-card" data-text="git config alias créer raccourci commande globale">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">config</span> <span class="flag">--global</span> <span class="flag">alias.</span><span class="arg">xx</span> <span class="str">"commande"</span></div>
+      <button class="copy-btn" onclick="copy('git config --global alias.lg "log --oneline --graph --all --decorate"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Crée un alias global. Remplacer <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#3B6D11">xx</code> par le nom souhaité.</div>
+  </div>
+
+  <div class="cmd-card" data-text="alias courants liste st co sw br ci cm lg ll last df ds ss sp">
+    <div class="cmd-top">
+      <div class="cmd-code" style="color:var(--color-text-secondary);font-size:13px">Alias les plus courants</div>
+    </div>
+    <div class="sub-list" style="margin-top:6px">
+      <div class="sub-item"><span class="sub-code">st</span><span class="sub-desc">= status</span></div>
+      <div class="sub-item"><span class="sub-code">co</span><span class="sub-desc">= checkout</span></div>
+      <div class="sub-item"><span class="sub-code">sw</span><span class="sub-desc">= switch</span></div>
+      <div class="sub-item"><span class="sub-code">br</span><span class="sub-desc">= branch</span></div>
+      <div class="sub-item"><span class="sub-code">ci</span><span class="sub-desc">= commit</span></div>
+      <div class="sub-item"><span class="sub-code">ca</span><span class="sub-desc">= commit --amend --no-edit</span></div>
+      <div class="sub-item"><span class="sub-code">cm</span><span class="sub-desc">= commit -m</span></div>
+      <div class="sub-item"><span class="sub-code">lg</span><span class="sub-desc">= log --oneline --graph --all --decorate</span></div>
+      <div class="sub-item"><span class="sub-code">ll</span><span class="sub-desc">= log --oneline -15</span></div>
+      <div class="sub-item"><span class="sub-code">last</span><span class="sub-desc">= log -1 HEAD --stat</span></div>
+      <div class="sub-item"><span class="sub-code">df</span><span class="sub-desc">= diff</span></div>
+      <div class="sub-item"><span class="sub-code">ds</span><span class="sub-desc">= diff --staged</span></div>
+      <div class="sub-item"><span class="sub-code">ss</span><span class="sub-desc">= stash</span></div>
+      <div class="sub-item"><span class="sub-code">sp</span><span class="sub-desc">= stash pop</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git config lister alias liste voir tous">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">config</span> <span class="flag">--global --get-regexp</span> <span class="str">alias</span></div>
+      <button class="copy-btn" onclick="copy('git config --global --get-regexp alias', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Liste tous les alias configurés globalement.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git config unset supprimer alias">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">config</span> <span class="flag">--global --unset</span> <span class="arg">alias.st</span></div>
+      <button class="copy-btn" onclick="copy('git config --global --unset alias.st', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Supprime un alias spécifique.</div>
+  </div>
+</div>
+
+<!-- BRANCHES -->
+<div class="section hidden" data-section="branches" id="sec-branches">
+  <div class="section-header">
+    <div class="section-dot" style="background:#185FA5"></div>
+    <span class="section-title">Branches</span>
+  </div>
+
+  <div class="cmd-card" data-text="git branch créer branche">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">branch</span> <span class="arg">&lt;nom&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git branch ma-branche', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Crée une nouvelle branche sans basculer dessus.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git switch -c créer basculer branche commande">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">switch</span> <span class="flag">-c</span> <span class="arg">&lt;nom&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git switch -c ma-branche', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Crée une branche et bascule dessus en une seule commande.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git branch lister branches locales distantes merged">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">branch</span> <span class="flag">[options]</span></div>
+    </div>
+    <div class="sub-list" style="margin-top:6px">
+      <div class="sub-item"><span class="sub-code">git branch</span><span class="sub-desc">Branches locales uniquement</span></div>
+      <div class="sub-item"><span class="sub-code">git branch -a</span><span class="sub-desc">Branches locales + distantes</span></div>
+      <div class="sub-item"><span class="sub-code">git branch -v</span><span class="sub-desc">Branches avec leur dernier commit</span></div>
+      <div class="sub-item"><span class="sub-code">git branch --merged</span><span class="sub-desc">Branches déjà fusionnées dans HEAD</span></div>
+      <div class="sub-item"><span class="sub-code">git branch --no-merged</span><span class="sub-desc">Branches non encore fusionnées</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git switch revenir branche précédente">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">switch</span> <span class="flag">-</span></div>
+      <button class="copy-btn" onclick="copy('git switch -', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Revient à la branche précédente (comme <code style="font-family:'JetBrains Mono',monospace;font-size:12px">cd -</code> dans le terminal).</div>
+  </div>
+
+  <div class="cmd-card" data-text="git branch supprimer branche fusionnée -d -D">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">branch</span> <span class="flag">-d</span> <span class="arg">&lt;nom&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git branch -d ma-branche', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Supprime une branche déjà fusionnée. Utilisez <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A32D2D">-D</code> pour forcer la suppression même sans fusion.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git branch renommer -m branche nouveau nom">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">branch</span> <span class="flag">-m</span> <span class="arg">&lt;nouveau-nom&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git branch -m nouveau-nom', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Renomme la branche courante.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git branch -m &lt;ancien&gt; &lt;nouveau&gt;</span><span class="sub-desc">Renomme une branche spécifique</span></div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <div class="section-dot" style="background:#534AB7"></div>
+    <span class="section-title">Branches distantes et tracking</span>
+  </div>
+
+  <div class="cmd-card" data-text="git fetch origin récupérer sans fusionner remote">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">fetch</span> <span class="arg">origin</span></div>
+      <button class="copy-btn" onclick="copy('git fetch origin', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Récupère les changements distants sans les fusionner dans la branche locale.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git branch tracking suivi upstream vv set-upstream">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">branch</span> <span class="flag">-vv</span></div>
+      <button class="copy-btn" onclick="copy('git branch -vv', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Voir toutes les relations de tracking (avance / retard par rapport à la branche distante).</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git switch --track origin/&lt;branche&gt;</span><span class="sub-desc">Créer et suivre une branche distante</span></div>
+      <div class="sub-item"><span class="sub-code">git branch -u origin/&lt;branche&gt;</span><span class="sub-desc">Définir le tracking sur une branche existante</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git push origin branche distante pousser supprimer all">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">push</span> <span class="flag">-u</span> <span class="arg">origin &lt;branche&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git push -u origin ma-branche', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Premier push — crée la branche distante et configure le tracking.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git push --all origin</span><span class="sub-desc">Pousse toutes les branches</span></div>
+      <div class="sub-item"><span class="sub-code">git push origin --delete &lt;branche&gt;</span><span class="sub-desc">Supprime une branche distante</span></div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:1.5rem">
+    <div class="section-dot" style="background:#993356"></div>
+    <span class="section-title">Cherry-pick</span>
+  </div>
+
+  <div class="cmd-card" data-text="git cherry-pick commit précis copier récupérer">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">cherry-pick</span> <span class="arg">&lt;commit&gt;</span></div>
+      <button class="copy-btn" onclick="copy('git cherry-pick abc1234', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Copie un commit précis sur la branche actuelle. Utile pour récupérer un correctif sans fusionner toute une branche.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git cherry-pick A..D</span><span class="sub-desc">Du commit A (exclu) au commit D (inclus)</span></div>
+      <div class="sub-item"><span class="sub-code">git cherry-pick A^..D</span><span class="sub-desc">Du commit A (inclus) au commit D (inclus)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- AVANCÉ -->
+<div class="section hidden" data-section="avance" id="sec-avance">
+  <div class="section-header">
+    <div class="section-dot" style="background:#854F0B"></div>
+    <span class="section-title">Outils avancés</span>
+  </div>
+
+  <div class="cmd-card" data-text="git add -p partiel partie modifications interactif">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">add</span> <span class="flag">-p</span></div>
+      <button class="copy-btn" onclick="copy('git add -p', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Commiter seulement une partie des modifications — choisir les hunks à inclure de façon interactive.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git stash mettre de côté modifications temporaire changer branche">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">stash</span></div>
+      <button class="copy-btn" onclick="copy('git stash', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Met de côté les modifications en cours pour pouvoir changer de branche. Récupérer avec <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#3B6D11">git stash pop</code>.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git rebase -i interactif nettoyer commits historique squash">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">rebase</span> <span class="flag">-i</span> <span class="arg">HEAD~N</span></div>
+      <button class="copy-btn" onclick="copy('git rebase -i HEAD~5', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Nettoyer et réorganiser les commits avant de pousser. Permet de squasher, renommer, réordonner.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git bisect bug recherche binaire commit introduit">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">bisect</span></div>
+      <button class="copy-btn" onclick="copy('git bisect start', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Recherche par dichotomie binaire le commit qui a introduit un bug.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git merge abort annuler merge raté conflit">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">merge</span> <span class="flag">--abort</span></div>
+      <button class="copy-btn" onclick="copy('git merge --abort', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Annule un merge en cours en cas de conflits non résolus.</div>
+  </div>
+</div>
+
+<!-- RECHERCHE -->
+<div class="section hidden" data-section="recherche" id="sec-recherche">
+  <div class="section-header">
+    <div class="section-dot" style="background:#1D9E75"></div>
+    <span class="section-title">Recherche dans le dépôt</span>
+  </div>
+
+  <div class="cmd-card" data-text="git grep chercher chaîne texte repo fichier">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">grep</span> <span class="str">"TODO"</span></div>
+      <button class="copy-btn" onclick="copy('git grep "TODO"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Cherche une chaîne de caractères dans tout le dépôt. Plus rapide que <code style="font-family:'JetBrains Mono',monospace;font-size:12px">grep</code> classique car il ignore les fichiers non-trackés.</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">-n</span><span class="sub-desc">Affiche les numéros de ligne</span></div>
+      <div class="sub-item"><span class="sub-code">-c</span><span class="sub-desc">Compte les occurrences par fichier</span></div>
+      <div class="sub-item"><span class="sub-code">-l</span><span class="sub-desc">Liste uniquement les fichiers concernés</span></div>
+      <div class="sub-item"><span class="sub-code">-i</span><span class="sub-desc">Insensible à la casse</span></div>
+      <div class="sub-item"><span class="sub-code">-w</span><span class="sub-desc">Mot entier uniquement</span></div>
+      <div class="sub-item"><span class="sub-code">-p</span><span class="sub-desc">Affiche la fonction englobante</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git grep -e AND OR combinaison plusieurs motifs">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">grep</span> <span class="flag">-l -e</span> <span class="str">"calculate"</span> <span class="flag">--and -e</span> <span class="str">"price"</span></div>
+      <button class="copy-btn" onclick="copy('git grep -l -e "calculate" --and -e "price"', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Fichiers contenant "calculate" <strong>ET</strong> "price".</div>
+    <div class="sub-list">
+      <div class="sub-item"><span class="sub-code">git grep -e "error" --or -e "warning"</span><span class="sub-desc">Lignes contenant "error" <strong>OU</strong> "warning"</span></div>
+      <div class="sub-item"><span class="sub-code">git grep "mot" &lt;branche&gt;</span><span class="sub-desc">Chercher dans une autre branche</span></div>
+    </div>
+  </div>
+
+  <div class="cmd-card" data-text="git blame qui écrit ligne auteur responsable">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">blame</span> <span class="flag">-L 42,50</span> <span class="arg">src/app.py</span></div>
+      <button class="copy-btn" onclick="copy('git blame -L 42,50 src/app.py', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Affiche qui a écrit chaque ligne dans une plage donnée du fichier.</div>
+  </div>
+
+  <div class="cmd-card" data-text="git log -L évolution fonction historique ligne">
+    <div class="cmd-top">
+      <div class="cmd-code"><span class="git">git</span> <span class="cmd-name">log</span> <span class="flag">-L</span> <span class="str">:calculate_price:src/app.py</span></div>
+      <button class="copy-btn" onclick="copy('git log -L :calculate_price:src/app.py', this)">copier</button>
+    </div>
+    <div class="cmd-desc">Voir l'évolution complète d'une fonction dans l'historique.</div>
+  </div>
+
+  <div class="cmd-card" data-text="workflow debug débogage grep blame log combiner">
+    <div class="cmd-top">
+      <div class="cmd-code" style="color:var(--color-text-secondary);font-size:13px">Workflow de débogage</div>
+    </div>
+    <div class="tip-box" style="border-left-color:#185FA5">
+      <strong>Étape 1</strong> — <code style="font-family:'JetBrains Mono',monospace;font-size:12px">git grep -n "calculate_price"</code> → trouver où la fonction est utilisée<br>
+      <strong>Étape 2</strong> — <code style="font-family:'JetBrains Mono',monospace;font-size:12px">git log -S "calculate_price"</code> → quand a-t-elle été modifiée ?<br>
+      <strong>Étape 3</strong> — <code style="font-family:'JetBrains Mono',monospace;font-size:12px">git log -L :calculate_price:src/app.py</code> → voir l'évolution complète<br>
+      <strong>Étape 4</strong> — <code style="font-family:'JetBrains Mono',monospace;font-size:12px">git blame -L 42,50 src/app.py</code> → qui a écrit cette ligne ?
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentSection = 'all';
+
+  function filterSection(section, btn) {
+    currentSection = section;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s => {
+      if (section === 'all' || s.dataset.section === section) {
+        s.classList.remove('hidden');
+      } else {
+        s.classList.add('hidden');
+      }
+    });
+    filterAll();
+  }
+
+  function filterAll() {
+    const q = document.getElementById('search').value.toLowerCase().trim();
+    let anyVisible = false;
+    document.querySelectorAll('.cmd-card').forEach(card => {
+      const section = card.closest('.section');
+      const sectionVisible = currentSection === 'all' || (section && section.dataset.section === currentSection);
+      const text = (card.dataset.text || '') + ' ' + card.innerText.toLowerCase();
+      const match = !q || text.includes(q);
+      if (sectionVisible && match) {
+        card.classList.remove('hidden');
+        anyVisible = true;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    document.getElementById('empty').classList.toggle('visible', !anyVisible && !!q);
+  }
+
+  function copy(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'copié !';
+      btn.style.color = '#1D9E75';
+      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1500);
+    });
+  }
+</script>
